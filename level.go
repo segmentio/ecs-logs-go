@@ -29,6 +29,10 @@ func (e ParseLevelError) Error() string {
 	return fmt.Sprintf("invalid message level %#v", e.Level)
 }
 
+func MakeLevel(p int) Level {
+	return Level(p + 1)
+}
+
 func ParseLevel(s string) (lvl Level, err error) {
 	switch strings.ToUpper(s) {
 	case "EMERG":
@@ -76,8 +80,12 @@ func (lvl Level) String() string {
 	}
 }
 
+func (lvl Level) Priority() int {
+	return int(lvl - 1)
+}
+
 func (lvl Level) GoString() string {
-	return "Level(" + strconv.Itoa(int(lvl)-1) + ")"
+	return "Level(" + strconv.Itoa(lvl.Priority()) + ")"
 }
 
 func (lvl Level) MarshalText() (b []byte, err error) {

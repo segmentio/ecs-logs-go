@@ -108,3 +108,11 @@ func TestLevelText(t *testing.T) {
 		}
 	}
 }
+
+func TestLevelPriority(t *testing.T) {
+	for _, test := range levelTests {
+		if lvl := MakeLevel(test.lvl.Priority()); lvl != test.lvl {
+			t.Errorf("%s: conversion to priority and back to a level did not produce the initial value: %s", test.lvl, lvl)
+		}
+	}
+}
