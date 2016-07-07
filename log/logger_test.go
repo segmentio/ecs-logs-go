@@ -1,6 +1,7 @@
 package log_ecslogs
 
 import (
+	"bytes"
 	"log"
 	"reflect"
 	"testing"
@@ -48,7 +49,7 @@ func TestLineWriter(t *testing.T) {
 	}
 }
 
-func TestNewWriter(t *testing.T) {
+func TestWriter(t *testing.T) {
 	tests := []struct {
 		entries []Entry
 		content string
@@ -122,7 +123,39 @@ func TestNewWriter(t *testing.T) {
 		} else if n != len(test.content) {
 			t.Errorf("test#%d: invalid byte count returned: %d != %d", i, n, len(test.content))
 		} else if !reflect.DeepEqual(entries, test.entries) {
-			t.Errorf("test#%d: the writer produced invalid entries:\n%#v\n%#v", entries, test.entries)
+			t.Errorf("test#%d: the writer produced invalid entries:\n%#v\n%#v", i, entries, test.entries)
+		}
+	}
+}
+
+func TestLogger(t *testing.T) {
+	tests := []struct {
+		input  []string
+		output string
+	}{
+		{
+			input:  nil,
+			output: ``,
+		},
+		{
+			input: []string{"A", "B", "C"},
+			output: `{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{},"message":"A"}
+{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{},"message":"B"}
+{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{},"message":"C"}
+`,
+		},
+	}
+
+	for i, test := range tests {
+		buffer := &bytes.Buffer{}
+		logger := New(buffer, "==> ", 0)
+
+		for _, msg := range test.input {
+			logger.Println(msg)
+		}
+
+		if s := buffer.String(); s != test.output {
+			t.Errorf("test#%d: invalid output:\n- expected: %v\n- found:    %v", i, test.output, s)
 		}
 	}
 }

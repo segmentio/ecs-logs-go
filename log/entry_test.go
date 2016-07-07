@@ -183,7 +183,7 @@ func TestParseEntryLogger(t *testing.T) {
 			t.Error("error parsing entry:", err)
 		} else {
 			if entry.Prefix != test.p {
-				t.Error("invalid entry prefix: %#v != %#v", entry.Prefix, test.p)
+				t.Errorf("invalid entry prefix: %#v != %#v", entry.Prefix, test.p)
 			}
 			if entry.Message != test.m {
 				t.Errorf("invalid entry message: %#v != %#v", entry.Message, test.m)
