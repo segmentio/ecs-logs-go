@@ -18,7 +18,7 @@ func (f LoggerFunc) Log(e Event) error {
 
 func NewLogger(w io.Writer) Logger {
 	if w == nil {
-		w = os.Stdout
+		w = os.Stderr
 	}
 	enc := json.NewEncoder(w)
 	return LoggerFunc(func(event Event) error { return enc.Encode(event) })
