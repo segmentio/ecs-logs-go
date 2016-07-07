@@ -71,7 +71,7 @@ func TestParseEntry(t *testing.T) {
 			p: "[prefix] ",
 			f: 0,
 			e: Entry{
-				Prefix: "[prefix] ",
+				Prefix: "[prefix]",
 			},
 		},
 		{
@@ -79,7 +79,7 @@ func TestParseEntry(t *testing.T) {
 			p: "[prefix] ",
 			f: log.LstdFlags,
 			e: Entry{
-				Prefix: "[prefix] ",
+				Prefix: "[prefix]",
 				Time:   time.Date(2016, 7, 7, 12, 6, 25, 0, time.Local),
 			},
 		},
@@ -112,7 +112,7 @@ func TestParseEntry(t *testing.T) {
 			p: "[prefix] ",
 			f: 0,
 			e: Entry{
-				Prefix:  "[prefix] ",
+				Prefix:  "[prefix]",
 				Message: "Hello World!",
 			},
 		},
@@ -121,7 +121,7 @@ func TestParseEntry(t *testing.T) {
 			p: "[prefix] ",
 			f: log.LstdFlags | log.LUTC,
 			e: Entry{
-				Prefix:  "[prefix] ",
+				Prefix:  "[prefix]",
 				Message: "Hello World!",
 				Time:    time.Date(2016, 7, 7, 12, 6, 25, 0, time.UTC),
 			},
@@ -131,7 +131,7 @@ func TestParseEntry(t *testing.T) {
 			p: "[prefix] ",
 			f: log.LstdFlags | log.Lshortfile,
 			e: Entry{
-				Prefix:  "[prefix] ",
+				Prefix:  "[prefix]",
 				Message: "Hello World!",
 				File:    "entry_test.go",
 				Line:    88,
@@ -143,7 +143,7 @@ func TestParseEntry(t *testing.T) {
 			p: "[prefix] ",
 			f: log.LstdFlags | log.Llongfile,
 			e: Entry{
-				Prefix:  "[prefix] ",
+				Prefix:  "[prefix]",
 				Message: "Hello World!",
 				File:    "/home/local/dev/src/github.com/segmentio/ecs-logs-go/log/entry_test.go",
 				Line:    88,

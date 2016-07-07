@@ -32,7 +32,7 @@ func ParseEntry(s string, prefix string, flags int) (entry Entry, err error) {
 		err = fmt.Errorf("missing prefix in log line: %#v", prefix)
 	}
 
-	entry.Prefix = prefix
+	entry.Prefix = strings.TrimSpace(prefix)
 	s = s[len(prefix):]
 
 	if format := TimeFormat(flags); len(format) != 0 {

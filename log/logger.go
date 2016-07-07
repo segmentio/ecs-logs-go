@@ -76,7 +76,7 @@ func makeEvent(entry Entry) ecslogs.Event {
 	return ecslogs.Event{
 		Level:   ecslogs.INFO,
 		Info:    makeEventInfo(entry),
-		Data:    ecslogs.EventData{},
+		Data:    makeEventData(entry),
 		Message: entry.Message,
 		Time:    entry.Time,
 	}
@@ -87,4 +87,12 @@ func makeEventInfo(entry Entry) (info ecslogs.EventInfo) {
 		info.Source = entry.File + ":" + strconv.Itoa(entry.Line)
 	}
 	return
+}
+
+func makeEventData(entry Entry) (data ecslogs.EventData) {
+	data = ecslogs.EventData{}
+	if len(entry.Prefix) != 0 {
+		data["prefix"] = entry.Prefix
+	}
+	return data
 }

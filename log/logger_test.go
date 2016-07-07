@@ -65,35 +65,35 @@ func TestWriter(t *testing.T) {
 		{
 			entries: []Entry{
 				Entry{
-					Prefix:  "[12345] ",
+					Prefix:  "[12345]",
 					Message: "Hello World!",
 					File:    "logger_test.go",
 					Line:    21,
 					Time:    time.Date(2016, 7, 7, 12, 6, 25, 0, time.UTC),
 				},
 				Entry{
-					Prefix:  "[12345] ",
+					Prefix:  "[12345]",
 					Message: "How are you?",
 					File:    "logger_test.go",
 					Line:    42,
 					Time:    time.Date(2016, 7, 7, 12, 6, 26, 0, time.UTC),
 				},
 				Entry{
-					Prefix:  "[12345] ",
+					Prefix:  "[12345]",
 					Message: "Another log message...",
 					File:    "logger_test.go",
 					Line:    84,
 					Time:    time.Date(2016, 7, 7, 12, 6, 27, 0, time.UTC),
 				},
 				Entry{
-					Prefix:  "[12345] ",
+					Prefix:  "[12345]",
 					Message: "Hello World!",
 					File:    "logger_test.go",
 					Line:    168,
 					Time:    time.Date(2016, 7, 7, 12, 6, 28, 0, time.UTC),
 				},
 				Entry{
-					Prefix:  "[12345] ",
+					Prefix:  "[12345]",
 					Message: "Hello World!",
 					File:    "logger_test.go",
 					Line:    336,
@@ -139,16 +139,16 @@ func TestLogger(t *testing.T) {
 		},
 		{
 			input: []string{"A", "B", "C"},
-			output: `{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{},"message":"A"}
-{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{},"message":"B"}
-{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{},"message":"C"}
+			output: `{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{"prefix":"test"},"message":"A"}
+{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{"prefix":"test"},"message":"B"}
+{"level":"INFO","time":"0001-01-01T00:00:00Z","info":{},"data":{"prefix":"test"},"message":"C"}
 `,
 		},
 	}
 
 	for i, test := range tests {
 		buffer := &bytes.Buffer{}
-		logger := New(buffer, "==> ", 0)
+		logger := New(buffer, "test ", 0)
 
 		for _, msg := range test.input {
 			logger.Println(msg)
