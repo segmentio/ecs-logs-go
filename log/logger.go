@@ -23,8 +23,8 @@ func New(out io.Writer, prefix string, flags int) *log.Logger {
 	return log.New(NewWriter(prefix, flags, NewHandler(out)), prefix, flags)
 }
 
-func NewLogger(out io.Writer, logger *log.Logger) *log.Logger {
-	return New(out, logger.Prefix(), logger.Flags())
+func NewOutput(out io.Writer, prefix string, flags int) io.Writer {
+	return NewWriter(prefix, flags, NewHandler(out))
 }
 
 func NewHandler(out io.Writer) Handler {
