@@ -122,6 +122,30 @@ func (lvl *Level) UnmarshalJSON(b []byte) (err error) {
 	return
 }
 
+func (lvl Level) MarshalYAML() (b []byte, err error) {
+	b = []byte(lvl.String())
+	return
+}
+
+func (lvl *Level) UnmarshalYAML(f func(interface{}) error) (err error) {
+	var s string
+
+	if err = f(&s); err != nil {
+		return
+	}
+
+	return lvl.Set(s)
+}
+
+func (lvl Level) Get() interface{} {
+	return lvl
+}
+
+func (lvl *Level) Set(s string) (err error) {
+	*lvl, err = ParseLevel(s)
+	return
+}
+
 func startsWith(b []byte, c byte) bool {
 	return len(b) != 0 && b[0] == c
 }

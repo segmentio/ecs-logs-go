@@ -1,6 +1,10 @@
 package ecslogs
 
-import "testing"
+import (
+	"flag"
+	"reflect"
+	"testing"
+)
 
 var levelTests = []struct {
 	lvl   Level
@@ -83,6 +87,22 @@ func TestLevelGoString(t *testing.T) {
 	}
 }
 
+func TestLevelYAML(t *testing.T) {
+	for _, test := range levelTests {
+		if b, err := test.lvl.MarshalYAML(); err != nil {
+			t.Errorf("%s: %s", test.lvl, err)
+		} else {
+			var lvl Level
+			if err = lvl.UnmarshalYAML(func(v interface{}) error {
+				reflect.ValueOf(v).Elem().SetString(string(b))
+				return nil
+			}); err != nil {
+				t.Errorf("%s: %s", lvl, err)
+			}
+		}
+	}
+}
+
 func TestLevelJSON(t *testing.T) {
 	for _, test := range levelTests {
 		if b, err := test.lvl.MarshalJSON(); err != nil {
@@ -114,5 +134,17 @@ func TestLevelPriority(t *testing.T) {
 		if lvl := MakeLevel(test.lvl.Priority()); lvl != test.lvl {
 			t.Errorf("%s: conversion to priority and back to a level did not produce the initial value: %s", test.lvl, lvl)
 		}
+	}
+}
+
+func TestLevelFlag(t *testing.T) {
+	lvl := NONE
+	set := flag.NewFlagSet("ecslogs", flag.ContinueOnError)
+	set.Var(&lvl, "log-level", "")
+
+	if err := set.Parse([]string{"-log-level", "warn"}); err != nil {
+		t.Error(err)
+	} else if lvl != WARN {
+		t.Error("invalid log level parsed from command line arguments:", lvl)
 	}
 }
