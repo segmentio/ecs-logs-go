@@ -3,20 +3,34 @@ machine:
     - docker
   environment:
     PKG: ${CIRCLE_PROJECT_REPONAME}
+    URL: github.com/${CIRCLE_PROJECT_USERNAME}/${PKG}
 
 dependencies:
   pre:
     - docker pull segment/golang:latest
   override:
-    - docker run -i -t -v ${HOME}/.ssh:/root/.ssh:ro -v ${PWD}:/go/src/${PKG} -w /go/src/${PKG} segment/golang:latest get
+    - >
+      docker run -i -t
+      -v ${HOME}/.ssh:/root/.ssh:ro
+      -v /tmp/go:/go -v ${PWD}:/go/src/${URL}
+      -w /go/src/${URL}
+      segment/golang:latest get
 
 test:
   override:
     - >
-      docker run -i -t -v ${PWD}:/go/src/${PKG} -w /go/src/${PKG}
+      docker run -i -t
+      -v /tmp/go:/go
+      -v ${PWD}:/go/src/${URL}
       -v /var/run/docker.sock:/var/run/docker.sock
       -v $(which docker):/usr/bin/docker:ro
       -v $(which docker-compose):/usr/bin/docker-compose:ro
+      -w /go/src/${URL}
       segment/golang:latest vet lint test benchmark
   post:
-    - docker run -i -t -v ${PWD}:/go/src/${PKG} -w /go/src/${PKG} segment/golang:latest build
+    - >
+      docker run -i -t
+      -v /tmp/go:/go
+      -v ${PWD}:/go/src/${URL}
+      -w /go/src/${URL}
+      segment/golang:latest build
