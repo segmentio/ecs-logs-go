@@ -2,7 +2,7 @@ machine:
   services:
     - docker
   environment:
-    - PKG: ${CIRCLE_PROJECT_REPONAME}
+    PKG: ${CIRCLE_PROJECT_REPONAME}
 
 dependencies:
   pre:
