@@ -30,7 +30,7 @@ func TestHandler(t *testing.T) {
 	// I wish we could make better testing here but the apex
 	// API doesn't let us mock the timestamp so we can't really
 	// predict what "time" is gonna be.
-	if !strings.HasPrefix(s, `{"level":"ERROR","time":"`) || !strings.HasSuffix(s, `","info":{"source":"testing/testing.go:42:testing.tRunner","errors":[{"type":"*errors.errorString","error":"EOF"}]},"data":{"hello":"world"},"message":"an error was raised (EOF)"}
+	if !strings.HasPrefix(s, `{"level":"ERROR","time":"`) || !strings.HasSuffix(s, `"errors":[{"type":"*errors.errorString","error":"EOF"}]},"data":{"hello":"world"},"message":"an error was raised (EOF)"}
 `) {
 		t.Error("apex handler failed:", s)
 	}
