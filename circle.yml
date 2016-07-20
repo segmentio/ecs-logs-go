@@ -23,6 +23,6 @@ dependencies:
 
 test:
   override:
-    - ${DOCKER} segment/golang:latest vet lint test benchmark
+    - ${DOCKER} segment/golang:latest vet lint test bench
   post:
     - ${DOCKER} segment/golang:latest build
