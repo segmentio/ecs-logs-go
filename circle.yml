@@ -6,7 +6,8 @@ machine:
     URL: github.com/${CIRCLE_PROJECT_USERNAME}/${PKG}
     DOCKER: >
       docker run -i -t
-      -v /tmp/go:/go
+      -e GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+      -v ${GOPATH%%:*}:/go
       -v ${PWD}:/go/src/${URL}
       -v /var/run/docker.sock:/run/docker.sock
       -v $(which docker):/usr/bin/docker:ro
@@ -14,6 +15,8 @@ machine:
       -w /go/src/${URL}
 
 dependencies:
+  cache_directories:
+    - /var/lib/docker
   pre:
     - docker pull segment/golang:latest
   override:
