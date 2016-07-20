@@ -14,8 +14,6 @@ machine:
       -w /go/src/${URL}
 
 dependencies:
-  cache_directories:
-    - /var/lib/docker
   pre:
     - docker pull segment/golang:latest
   override:
