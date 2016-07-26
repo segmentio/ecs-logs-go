@@ -9,6 +9,10 @@ import (
 	"github.com/segmentio/ecs-logs-go"
 )
 
+const (
+	DefaultLevel = ecslogs.INFO
+)
+
 type Handler interface {
 	HandleEntry(Entry) error
 }
@@ -20,17 +24,29 @@ func (h HandlerFunc) HandleEntry(entry Entry) error {
 }
 
 func New(out io.Writer, prefix string, flags int) *log.Logger {
-	return log.New(NewWriter(prefix, flags, NewHandler(out)), prefix, flags)
+	return NewWithLevel(DefaultLevel, out, prefix, flags)
+}
+
+func NewWithLevel(level ecslogs.Level, out io.Writer, prefix string, flags int) *log.Logger {
+	return log.New(NewWriter(prefix, flags, NewHandlerWithLevel(level, out)), prefix, flags)
 }
 
 func NewOutput(out io.Writer, prefix string, flags int) io.Writer {
-	return NewWriter(prefix, flags, NewHandler(out))
+	return NewOutputWithLevel(DefaultLevel, out, prefix, flags)
+}
+
+func NewOutputWithLevel(level ecslogs.Level, out io.Writer, prefix string, flags int) io.Writer {
+	return NewWriter(prefix, flags, NewHandlerWithLevel(level, out))
 }
 
 func NewHandler(out io.Writer) Handler {
+	return NewHandlerWithLevel(DefaultLevel, out)
+}
+
+func NewHandlerWithLevel(level ecslogs.Level, out io.Writer) Handler {
 	logger := ecslogs.NewLogger(out)
 	return HandlerFunc(func(entry Entry) error {
-		return logger.Log(makeEvent(entry))
+		return logger.Log(makeEvent(level, entry))
 	})
 }
 
@@ -72,9 +88,9 @@ func newLineWriter(w io.Writer) io.Writer {
 	})
 }
 
-func makeEvent(entry Entry) ecslogs.Event {
+func makeEvent(level ecslogs.Level, entry Entry) ecslogs.Event {
 	return ecslogs.Event{
-		Level:   ecslogs.INFO,
+		Level:   level,
 		Info:    makeEventInfo(entry),
 		Data:    makeEventData(entry),
 		Message: entry.Message,
