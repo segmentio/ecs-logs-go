@@ -19,6 +19,7 @@ const (
 	NOTICE
 	INFO
 	DEBUG
+	TRACE
 )
 
 type ParseLevelError struct {
@@ -51,6 +52,8 @@ func ParseLevel(s string) (lvl Level, err error) {
 		lvl = INFO
 	case "DEBUG":
 		lvl = DEBUG
+	case "TRACE":
+		lvl = TRACE
 	default:
 		err = ParseLevelError{s}
 	}
@@ -75,6 +78,8 @@ func (lvl Level) String() string {
 		return "INFO"
 	case DEBUG:
 		return "DEBUG"
+	case TRACE:
+		return "TRACE"
 	default:
 		return lvl.GoString()
 	}

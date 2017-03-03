@@ -51,6 +51,11 @@ var levelTests = []struct {
 		str:   "DEBUG",
 		gostr: "Level(7)",
 	},
+	{
+		lvl:   TRACE,
+		str:   "TRACE",
+		gostr: "Level(8)",
+	},
 }
 
 func TestParseLevelSuccess(t *testing.T) {
