@@ -112,3 +112,9 @@ func makeEventData(entry Entry) (data ecslogs.EventData) {
 	}
 	return data
 }
+
+func InstallDefaultLogOutput(handler Handler) {
+	writer := NewWriter("", 0, handler)
+	log.SetFlags(0)
+	log.SetOutput(writer)
+}
