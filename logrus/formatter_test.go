@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/segmentio/ecs-logs-go"
+	"github.com/sirupsen/logrus"
 )
 
 func TestFormatter(t *testing.T) {

@@ -3,8 +3,8 @@ package logrus_ecslogs
 import (
 	"bytes"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/segmentio/ecs-logs-go"
+	"github.com/sirupsen/logrus"
 )
 
 type Config struct {
@@ -26,7 +26,7 @@ func (f formatter) Format(entry *logrus.Entry) (b []byte, err error) {
 	var source string
 
 	if f.FuncInfo != nil {
-		if pc, ok := ecslogs.GuessCaller(f.Depth, 10, "github.com/segmentio/ecs-logs", "github.com/Sirupsen/logrus"); ok {
+		if pc, ok := ecslogs.GuessCaller(f.Depth, 10, "github.com/segmentio/ecs-logs", "github.com/sirupsen/logrus"); ok {
 			if info, ok := f.FuncInfo(pc); ok {
 				source = info.String()
 			}
