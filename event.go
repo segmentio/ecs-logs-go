@@ -9,16 +9,18 @@ import (
 )
 
 type EventError struct {
-	Type  string      `json:"type,omitempty"`
-	Error string      `json:"error,omitempty"`
-	Errno int         `json:"errno,omitempty"`
-	Stack interface{} `json:"stack,omitempty"`
+	Type          string      `json:"type,omitempty"`
+	Error         string      `json:"error,omitempty"`
+	Errno         int         `json:"errno,omitempty"`
+	Stack         interface{} `json:"stack,omitempty"`
+	OriginalError error       `json:"origError,omitempty"`
 }
 
 func MakeEventError(err error) EventError {
 	e := EventError{
-		Type:  reflect.TypeOf(err).String(),
-		Error: err.Error(),
+		Type:          reflect.TypeOf(err).String(),
+		Error:         err.Error(),
+		OriginalError: err,
 	}
 
 	if errno, ok := err.(syscall.Errno); ok {
