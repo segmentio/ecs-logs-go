@@ -1,4 +1,4 @@
-package apex_ecslogs
+package play_ecslogs
 
 import (
 	"bytes"
@@ -6,22 +6,18 @@ import (
 	"strings"
 	"testing"
 
-	apex "github.com/apex/log"
+	"github.com/go-playground/log"
 	"github.com/segmentio/ecs-logs-go"
 )
 
 func TestHandler(t *testing.T) {
 	buf := &bytes.Buffer{}
-	log := &apex.Logger{
-		Handler: NewHandlerWith(Config{
-			Output:   buf,
-			FuncInfo: testFuncInfo,
-		}),
-		Level: apex.DebugLevel,
-	}
+	log.AddHandler(NewHandlerWith(Config{
+		Output:   buf,
+		FuncInfo: testFuncInfo,
+	}), log.AllLevels...)
 
-	log.
-		WithField("error", io.EOF).
+	log.WithField("error", io.EOF).
 		WithField("hello", "world").
 		Errorf("an error was raised (%s)", io.EOF)
 
@@ -31,7 +27,7 @@ func TestHandler(t *testing.T) {
 	// API doesn't let us mock the timestamp so we can't really
 	// predict what "time" is gonna be.
 	if !strings.HasPrefix(s, `{"level":"ERROR","time":"`) || !strings.HasSuffix(s, `"errors":[{"type":"*errors.errorString","error":"EOF","origError":{}}]},"data":{"hello":"world"},"message":"an error was raised (EOF)"}`) {
-		t.Error("apex handler failed:", s)
+		t.Error("play handler failed:", s)
 	}
 }
 
