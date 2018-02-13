@@ -27,7 +27,7 @@ func TestHandler(t *testing.T) {
 	// API doesn't let us mock the timestamp so we can't really
 	// predict what "time" is gonna be.
 	if !strings.HasPrefix(s, `{"level":"ERROR","time":"`) || !strings.HasSuffix(s, `"errors":[{"type":"*errors.errorString","error":"EOF","origError":{}}]},"data":{"hello":"world"},"message":"an error was raised (EOF)"}`) {
-		t.Error("play handler failed:", "|"+s+"|")
+		t.Error("play handler failed:", s)
 	}
 }
 
