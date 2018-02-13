@@ -25,13 +25,12 @@ func TestHandler(t *testing.T) {
 		WithField("hello", "world").
 		Errorf("an error was raised (%s)", io.EOF)
 
-	s := buf.String()
+	s := strings.TrimSpace(buf.String())
 
 	// I wish we could make better testing here but the apex
 	// API doesn't let us mock the timestamp so we can't really
 	// predict what "time" is gonna be.
-	if !strings.HasPrefix(s, `{"level":"ERROR","time":"`) || !strings.HasSuffix(s, `"errors":[{"type":"*errors.errorString","error":"EOF"}]},"data":{"hello":"world"},"message":"an error was raised (EOF)"}
-`) {
+	if !strings.HasPrefix(s, `{"level":"ERROR","time":"`) || !strings.HasSuffix(s, `"errors":[{"type":"*errors.errorString","error":"EOF","origError":{}}]},"data":{"hello":"world"},"message":"an error was raised (EOF)"}`) {
 		t.Error("apex handler failed:", s)
 	}
 }
