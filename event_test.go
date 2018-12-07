@@ -1,6 +1,7 @@
 package ecslogs
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"syscall"
@@ -46,4 +47,13 @@ type fakeError struct {
 
 func (e *fakeError) Error() string {
 	return e.msg
+}
+
+func TestRoundtrip(t *testing.T) {
+	marshalled := Eprintf(ERROR, "error was raised %s", io.EOF).String()
+	var unmarshalled Event
+	err := json.Unmarshal([]byte(marshalled), &unmarshalled)
+	if err != nil {
+		t.Errorf("Couldn't unmarshal %s; %s", marshalled, err)
+	}
 }
