@@ -1,11 +1,12 @@
 package ecslogs
 
 import (
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"syscall"
 	"time"
+
+	"github.com/segmentio/encoding/json"
 )
 
 type EventError struct {

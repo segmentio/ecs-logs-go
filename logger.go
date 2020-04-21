@@ -1,10 +1,11 @@
 package ecslogs
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/segmentio/encoding/json"
 )
 
 type Logger interface {
