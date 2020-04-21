@@ -1,10 +1,11 @@
 package ecslogs
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/segmentio/encoding/json"
 )
 
 type Level int
