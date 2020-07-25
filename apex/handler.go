@@ -8,10 +8,10 @@ import (
 )
 
 type Config struct {
-	Output         io.Writer
-	Depth          int
-	FuncInfo       func(uintptr) (ecslogs.FuncInfo, bool)
-	MaxFieldLength int
+	Output      io.Writer
+	Depth       int
+	FuncInfo    func(uintptr) (ecslogs.FuncInfo, bool)
+	MaxFieldLen int
 }
 
 func NewHandler(w io.Writer) apex.Handler {
@@ -23,7 +23,7 @@ func NewHandlerWith(c Config) apex.Handler {
 
 	if c.FuncInfo == nil {
 		return apex.HandlerFunc(func(entry *apex.Entry) error {
-			return logger.Log(MakeEvent(entry, c.MaxFieldLength))
+			return logger.Log(MakeEvent(entry, c.MaxFieldLen))
 		})
 	}
 
@@ -36,7 +36,7 @@ func NewHandlerWith(c Config) apex.Handler {
 			}
 		}
 
-		return logger.Log(makeEvent(entry, source, c.MaxFieldLength))
+		return logger.Log(makeEvent(entry, source, c.MaxFieldLen))
 	})
 }
 

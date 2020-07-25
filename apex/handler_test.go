@@ -39,9 +39,9 @@ func TestHandlerMaxFieldLength(t *testing.T) {
 	buf := &bytes.Buffer{}
 	log := &apex.Logger{
 		Handler: NewHandlerWith(Config{
-			Output:         buf,
-			FuncInfo:       testFuncInfo,
-			MaxFieldLength: 10,
+			Output:      buf,
+			FuncInfo:    testFuncInfo,
+			MaxFieldLen: 10,
 		}),
 		Level: apex.DebugLevel,
 	}
