@@ -49,6 +49,10 @@ func TestHandlerMaxFieldLength(t *testing.T) {
 	log.
 		WithField("hello", 1234).
 		WithField("key", "01234567890123456789").
+		WithField("long-map", map[string]string{
+			"key1": "a long value",
+			"key2": "another long value",
+		}).
 		Info("abcdefghijklmnopqrstuvwxyz")
 
 	s := strings.TrimSpace(buf.String())

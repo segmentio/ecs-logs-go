@@ -1,6 +1,7 @@
 package apex_ecslogs
 
 import (
+	"encoding/json"
 	"io"
 
 	apex "github.com/apex/log"
@@ -74,12 +75,23 @@ func makeEventData(entry *apex.Entry, maxFieldLen int) ecslogs.EventData {
 
 	if maxFieldLen > 0 {
 		for k, v := range entry.Fields {
-			// Only check length on string values for now
-			strValue, ok := v.(string)
-			if ok && len(strValue) > maxFieldLen {
-				data[k] = strValue[:maxFieldLen]
-			} else {
-				data[k] = v
+			switch obj := v.(type) {
+			case string:
+				if len(obj) > maxFieldLen {
+					data[k] = obj[:maxFieldLen]
+				} else {
+					data[k] = obj
+				}
+			case bool, int8, uint8, int16, uint16, int32, uint32, int64, uint64, int, uint, uintptr,
+				float32, float64:
+				data[k] = obj
+			default:
+				objBytes, err := json.Marshal(obj)
+				if err != nil || len(objBytes) > maxFieldLen {
+					// Just drop the field entirely, don't bother figuring out how to trim it
+					continue
+				}
+				data[k] = obj
 			}
 		}
 	} else {
