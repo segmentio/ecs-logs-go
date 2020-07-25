@@ -47,7 +47,7 @@ func TestHandlerMaxFieldLength(t *testing.T) {
 	}
 
 	log.
-		WithField("hello", "world").
+		WithField("hello", 1234).
 		WithField("key", "01234567890123456789").
 		Info("abcdefghijklmnopqrstuvwxyz")
 
@@ -56,7 +56,7 @@ func TestHandlerMaxFieldLength(t *testing.T) {
 	// I wish we could make better testing here but the apex
 	// API doesn't let us mock the timestamp so we can't really
 	// predict what "time" is gonna be.
-	if !strings.HasPrefix(s, `{"level":"INFO","time":"`) || !strings.HasSuffix(s, `"info":{"source":"bytes/buffer.go:42:bytes.(*Buffer).String"},"data":{"hello":"world","key":"0123456789"},"message":"abcdefghij"}`) {
+	if !strings.HasPrefix(s, `{"level":"INFO","time":"`) || !strings.HasSuffix(s, `"info":{"source":"bytes/buffer.go:42:bytes.(*Buffer).String"},"data":{"hello":1234,"key":"0123456789"},"message":"abcdefghij"}`) {
 		t.Error("apex handler failed:", s)
 	}
 }
