@@ -4,13 +4,14 @@ import (
 	"io"
 
 	apex "github.com/apex/log"
-	"github.com/segmentio/ecs-logs-go"
+	ecslogs "github.com/segmentio/ecs-logs-go"
 )
 
 type Config struct {
-	Output   io.Writer
-	Depth    int
-	FuncInfo func(uintptr) (ecslogs.FuncInfo, bool)
+	Output         io.Writer
+	Depth          int
+	FuncInfo       func(uintptr) (ecslogs.FuncInfo, bool)
+	MaxFieldLength int
 }
 
 func NewHandler(w io.Writer) apex.Handler {
@@ -22,7 +23,7 @@ func NewHandlerWith(c Config) apex.Handler {
 
 	if c.FuncInfo == nil {
 		return apex.HandlerFunc(func(entry *apex.Entry) error {
-			return logger.Log(MakeEvent(entry))
+			return logger.Log(MakeEvent(entry, c.MaxFieldLength))
 		})
 	}
 
@@ -35,21 +36,29 @@ func NewHandlerWith(c Config) apex.Handler {
 			}
 		}
 
-		return logger.Log(makeEvent(entry, source))
+		return logger.Log(makeEvent(entry, source, c.MaxFieldLength))
 	})
 }
 
-func MakeEvent(entry *apex.Entry) ecslogs.Event {
-	return makeEvent(entry, "")
+func MakeEvent(entry *apex.Entry, maxFieldLen int) ecslogs.Event {
+	return makeEvent(entry, "", maxFieldLen)
 }
 
-func makeEvent(entry *apex.Entry, source string) ecslogs.Event {
+func makeEvent(entry *apex.Entry, source string, maxFieldLen int) ecslogs.Event {
+	var message string
+
+	if maxFieldLen > 0 && len(entry.Message) > maxFieldLen {
+		message = entry.Message[:maxFieldLen]
+	} else {
+		message = entry.Message
+	}
+
 	return ecslogs.Event{
 		Level:   makeLevel(entry.Level),
 		Info:    makeEventInfo(entry, source),
-		Data:    makeEventData(entry),
+		Data:    makeEventData(entry, maxFieldLen),
 		Time:    entry.Timestamp,
-		Message: entry.Message,
+		Message: message,
 	}
 }
 
@@ -60,11 +69,23 @@ func makeEventInfo(entry *apex.Entry, source string) ecslogs.EventInfo {
 	}
 }
 
-func makeEventData(entry *apex.Entry) ecslogs.EventData {
+func makeEventData(entry *apex.Entry, maxFieldLen int) ecslogs.EventData {
 	data := make(ecslogs.EventData, len(entry.Fields))
 
-	for k, v := range entry.Fields {
-		data[k] = v
+	if maxFieldLen > 0 {
+		for k, v := range entry.Fields {
+			// Only check length on string values for now
+			strValue, ok := v.(string)
+			if ok && len(strValue) > maxFieldLen {
+				data[k] = strValue[:maxFieldLen]
+			} else {
+				data[k] = v
+			}
+		}
+	} else {
+		for k, v := range entry.Fields {
+			data[k] = v
+		}
 	}
 
 	return data
